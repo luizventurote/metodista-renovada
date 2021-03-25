@@ -55,5 +55,16 @@ a:hover {
     background: #fff;
 }
 
+.live-link {
+  background: #dc3b32;
+  border-color: #dc3b32;
+}
 
+.live-link:hover,
+.live-link:focus
+ {
+  background: #ef1e12;
+  border-color: #ef1e12;
+  color: white;
+}
 
