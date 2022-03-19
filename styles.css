@@ -75,6 +75,32 @@ a:hover {
   color: white;
 }
 
+.virtude-link {
+  background: #5000ff;
+  border-color: #5000ff;
+}
+
+.virtude-link:hover,
+.virtude-link:focus
+ {
+  background: #7132fa;
+  border-color: #7132fa;
+  color: white;
+}
+
+.ative-link {
+  background: #ff0060;
+  border-color: #ff0060;
+}
+
+.ative-link:hover,
+.ative-link:focus
+ {
+  background: #ff3a84;
+  border-color: #ff3a84;
+  color: white;
+}
+
 .page-wrap {
   max-width: 350px;
   margin: auto;
