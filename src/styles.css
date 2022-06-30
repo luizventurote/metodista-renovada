@@ -7,8 +7,8 @@
 }
 
 .text-main-gradient {
-  background-color: #FFF479;
-  background-image: linear-gradient(45deg, #FFF479, #D456A9);
+  background-color: #37eef4;
+  background-image: linear-gradient(45deg, #37eef4, #ed39fd);
   background-size: 100%;
   background-repeat: repeat;
   -webkit-background-clip: text;
@@ -18,6 +18,6 @@
 }
 
 .bg-main-background {
-  background: rgb(255,244,121);
-  background: linear-gradient(133deg, rgba(255,244,121,1) 0%, rgba(212,86,169,1) 50%); 
+  background: #37eef4;
+  background: linear-gradient(120deg, #37eef4 0%, #ed39fd 70%); 
 }
