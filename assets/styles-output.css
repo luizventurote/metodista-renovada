@@ -781,8 +781,8 @@ video {
 }
 
 .text-main-gradient {
-  background-color: #1f003f;
-  background-image: linear-gradient(45deg, #17BBFE, #17BBC3);
+  background-color: #113792;
+  background-image: linear-gradient(45deg, #822d30, #113792);
   background-size: 100%;
   background-repeat: repeat;
   -webkit-background-clip: text;
@@ -793,7 +793,7 @@ video {
 
 .bg-main-background {
   background: #1f003f;
-  background: linear-gradient(120deg, #17BBFE 0%, #17BBC3 70%);
+  background: linear-gradient(120deg, #822d30 0%, #113792 70%);
 }
 
 .hover\:bg-gray-50:hover {
