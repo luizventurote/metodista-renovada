@@ -107,3 +107,17 @@ a:hover {
   padding: 0 20px;
   text-align: center;
 }
+
+.ative-green-link {
+  background: #00ffc2;
+  border-color: #00ffc2;
+  color: black;
+}
+
+.ative-green-link:hover,
+.ative-green-link:focus
+ {
+  background: #3ef6ca;
+  border-color: #3ef6ca;
+  color: black;
+}

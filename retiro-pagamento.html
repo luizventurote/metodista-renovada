@@ -10,7 +10,17 @@
 
 <body>
 
-    <div id="payment_link"></div>
+    <div style="max-width: 330px;text-align: center;margin: auto;padding: 50px 0 10px;">
+
+        <h1 style="line-height: 38px;">Pagamento</h1>
+
+        <p>Nós recebemos os seus dados corretamente! Agora você precisa realizar o pagamento para finalizar a sua inscrição do retiro.</p>
+
+    </div>
+
+    <div id="payment_link">
+        <a href="#" class="links" style="opacity: 0.6;">Carregando...</a>
+    </div>
 
     <script>
 
@@ -39,8 +49,10 @@
             // Add a link into the page with the payment information
             var link = document.createElement('a');
             link.setAttribute('href', url);
-            link.setAttribute('class', 'links');
+            link.setAttribute('class', 'links ative-green-link');
             link.innerHTML = 'Clique aqui para pagar';
+
+            document.getElementById('payment_link').innerHTML = '';
 
             document.getElementById('payment_link').appendChild(link);
         }
