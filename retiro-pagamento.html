@@ -42,6 +42,7 @@
             .then(function (data) {
                 console.log(data);
                 insertButtonIntoPage(data.result.url);
+                sendPaymentLinkToAirtable(data.result.url, id);
             });
 
         function insertButtonIntoPage(url) {
@@ -55,6 +56,19 @@
             document.getElementById('payment_link').innerHTML = '';
 
             document.getElementById('payment_link').appendChild(link);
+        }
+
+        function sendPaymentLinkToAirtable(paymentLink, id) {
+
+            let webhookUrl = 'http://localhost:8888/.netlify/functions/retiro-send-payment-link-airtable?id='+id+'&payment_link='+paymentLink;
+
+            fetch(webhookUrl)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                console.log(data);
+            });
         }
 
     </script>
