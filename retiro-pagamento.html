@@ -1,0 +1,52 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Pagamento - Retiro Igreja Metodista Renovada</title>
+    <meta name="robots" content="noindex" />
+</head>
+
+<body>
+
+    <div id="payment_link"></div>
+
+    <script>
+
+        // Get the URL parameters
+        var urlParams = new URLSearchParams(window.location.search);
+
+        // Get id, name and payment_method
+        var id = urlParams.get('id');
+        var name = urlParams.get('name');
+        var payment_method = urlParams.get('payment_method');
+
+        var paymentUrl = '/.netlify/functions/retiro-generate-payment-link?id=' + id + '&payment_method=' + payment_method + '&name=' + name + '';
+
+        // Make a fetch request to paymentUrl
+        fetch(paymentUrl)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                console.log(data);
+                insertButtonIntoPage(data.result.url);
+            });
+
+        function insertButtonIntoPage(url) {
+
+            // Add a link into the page with the payment information
+            var link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('class', 'links');
+            link.innerHTML = 'Clique aqui para pagar';
+
+            document.getElementById('payment_link').appendChild(link);
+        }
+
+    </script>
+
+</body>
+
+</html>
