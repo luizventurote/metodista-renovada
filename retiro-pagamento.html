@@ -60,7 +60,7 @@
 
         function sendPaymentLinkToAirtable(paymentLink, id) {
 
-            let webhookUrl = 'http://localhost:8888/.netlify/functions/retiro-send-payment-link-airtable?id='+id+'&payment_link='+paymentLink;
+            let webhookUrl = '/.netlify/functions/retiro-send-payment-link-airtable?id='+id+'&payment_link='+paymentLink;
 
             fetch(webhookUrl)
             .then(function (response) {
