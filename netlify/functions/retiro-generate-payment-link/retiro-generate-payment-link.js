@@ -25,7 +25,7 @@ const handler = async (event) => {
       "chargeType": "DETACHED",
       "callback": {
         "autoRedirect": true,
-        "successUrl": "https://www.luizventurote.com/"
+        "successUrl": "https://www.metodistarenovada.com/retiro-pagamento-obrigado"
       },
       "name": "Inscrição Retiro de Carnaval de 2024: " + name + " (" + id + ")",
       "description": "Inscrição de " + name + " para o Retiro de Carnaval de 2024 da Igreja Metodista Renovada ("+id+").",
