@@ -14,7 +14,8 @@
 
         <h1 style="line-height: 38px;">Pagamento</h1>
 
-        <p>Nós recebemos os seus dados corretamente! Agora você precisa realizar o pagamento para finalizar a sua inscrição do retiro.</p>
+        <p>Nós recebemos os seus dados corretamente! Agora você precisa realizar o pagamento para finalizar a sua
+            inscrição do retiro.</p>
 
     </div>
 
@@ -30,9 +31,9 @@
         // Get id, name and payment_method
         var id = urlParams.get('id');
         var name = urlParams.get('name');
-        var payment_method = urlParams.get('payment_method');
+        var age = urlParams.get('age');
 
-        var paymentUrl = '/.netlify/functions/retiro-generate-payment-link?id=' + id + '&payment_method=' + payment_method + '&name=' + name + '';
+        var paymentUrl = '/.netlify/functions/retiro-generate-payment-link?id=' + id + '&age=' + age + '&name=' + name + '';
 
         // Make a fetch request to paymentUrl
         fetch(paymentUrl)
@@ -47,6 +48,8 @@
 
         function insertButtonIntoPage(url) {
 
+            window.paymentLink = url;
+
             // Add a link into the page with the payment information
             var link = document.createElement('a');
             link.setAttribute('href', url);
@@ -56,19 +59,39 @@
             document.getElementById('payment_link').innerHTML = '';
 
             document.getElementById('payment_link').appendChild(link);
+
+            // Insert a button to copy the payment link
+            var button = document.createElement('a');
+            button.setAttribute('href', '#');
+            button.setAttribute('class', 'links');
+            button.setAttribute('onclick', 'copyPaymentLink()');
+            button.innerHTML = 'Copiar link de pagamento';
+
+            document.getElementById('payment_link').appendChild(button);
+        }
+
+        const copyPaymentLink = async () => {
+            try {
+                await navigator.clipboard.writeText(window.paymentLink);
+
+                alert("Link de pagamento copiado!");
+
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+            }
         }
 
         function sendPaymentLinkToAirtable(paymentLink, id) {
 
-            let webhookUrl = '/.netlify/functions/retiro-send-payment-link-airtable?id='+id+'&payment_link='+paymentLink;
+            let webhookUrl = '/.netlify/functions/retiro-send-payment-link-airtable?id=' + id + '&payment_link=' + paymentLink;
 
             fetch(webhookUrl)
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (data) {
-                console.log(data);
-            });
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    console.log(data);
+                });
         }
 
     </script>
