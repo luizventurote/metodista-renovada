@@ -39,6 +39,11 @@ const handler = async (event) => {
       paymentType = "CREDIT_CARD";
       maxInstallmentCount = 3;
       value = value + 14;
+
+      if ( age <= 10 ) {
+        value = value + 10;
+      }
+
       extraMessage = extraMessage + " Pagamento via cartão de crédito com acréscimo da taxa do cartão.";
     }
 
