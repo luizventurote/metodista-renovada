@@ -124,3 +124,12 @@ a:hover {
   padding: 0;
   opacity: 0.4;
 }
+
+.text-alert {
+  width: 290px;
+  text-align: center;
+  margin: 30px auto 0;
+  font-family: Arial;
+  background: #272727;
+  padding: 10px;
+}

@@ -14,7 +14,7 @@
 
         <h1 style="line-height: 38px;">Pagamento</h1>
 
-        <p>Nós recebemos os seus dados corretamente! Agora você precisa realizar o pagamento para finalizar a sua
+        <p id="main_text">Nós recebemos os seus dados corretamente! Agora você precisa realizar o pagamento para finalizar a sua
             inscrição do retiro.</p>
 
     </div>
@@ -39,13 +39,16 @@
             
             // Insert a button to register again
             var button = document.createElement('a');
-            button.setAttribute('href', '/retiro');
+            button.setAttribute('href', 'https://metodista.org/retiro');
             button.setAttribute('class', 'links');
             button.innerHTML = 'Fazer inscrição';
 
             document.getElementById('payment_link').innerHTML = '';
 
             document.getElementById('payment_link').appendChild(button);
+
+            // Change the main text
+            document.getElementById('main_text').innerHTML = 'Parece que você não preencheu todos os dados corretamente. Por favor, tente novamente ou entre em contato com a igreja.';
 
         } else {
 
@@ -71,11 +74,25 @@
             var link = document.createElement('a');
             link.setAttribute('href', url);
             link.setAttribute('class', 'links ative-green-link');
+            link.setAttribute('style', 'margin-top: 0;');
             link.innerHTML = 'Clique aqui para pagar';
 
             document.getElementById('payment_link').innerHTML = '';
 
             document.getElementById('payment_link').appendChild(link);
+
+            // Insert a paragraph
+            var paragraph = document.createElement('p');
+            paragraph.innerHTML = 'Para efetuar o pagamento, clique no botão acima. Você será redirecionado para a página de pagamento onde deverá informar os dados do pagante.';
+            paragraph.setAttribute('class', 'text-alert');
+
+            document.getElementById('payment_link').appendChild(paragraph);
+
+            // Insert a divider
+            var divider = document.createElement('hr');
+            divider.setAttribute('class', 'divider');
+
+            document.getElementById('payment_link').appendChild(divider);
 
             // Insert a button to copy the payment link
             var button = document.createElement('a');
@@ -86,19 +103,13 @@
 
             document.getElementById('payment_link').appendChild(button);
 
-            // Insert a divider
-            var divider = document.createElement('hr');
-            divider.setAttribute('class', 'divider');
-
-            document.getElementById('payment_link').appendChild(divider);
-
             // Insert a button to register again
-            var button = document.createElement('a');
-            button.setAttribute('href', '/retiro');
-            button.setAttribute('class', 'links');
-            button.innerHTML = 'Fazer outra inscrição';
+            // var button = document.createElement('a');
+            // button.setAttribute('href', '/retiro');
+            // button.setAttribute('class', 'links');
+            // button.innerHTML = 'Fazer outra inscrição';
 
-            document.getElementById('payment_link').appendChild(button);
+            // document.getElementById('payment_link').appendChild(button);
         }
 
         const copyPaymentLink = async () => {
