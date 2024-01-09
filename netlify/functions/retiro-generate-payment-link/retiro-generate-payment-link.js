@@ -37,9 +37,9 @@ const handler = async (event) => {
     // Credit card payment fee
     if (payment.toLowerCase().includes("cart") && age >= 6) {
       paymentType = "CREDIT_CARD";
-      maxInstallmentCount = 2;
-      value = value + 5;
-      extraMessage = extraMessage + " Pagamento via cartão de crédito com acréscimo de 5%.";
+      maxInstallmentCount = 3;
+      value = value + 14;
+      extraMessage = extraMessage + " Pagamento via cartão de crédito com acréscimo da taxa do cartão.";
     }
 
     var myHeaders = new Headers();
