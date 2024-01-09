@@ -3,15 +3,19 @@ const handler = async (event) => {
   try {
 
     // Get request id, name and age param
-    const { id, name, age } = event.queryStringParameters;
+    const { id, name, age, payment } = event.queryStringParameters;
 
     // Verify if request id, name and age param exists
-    if (!id || !name || !age) {
+    if (!id || !name || !age || !payment) {
       return {
         statusCode: 400,
         body: JSON.stringify({ message: 'Missing parameters' })
       }
     }
+
+    // Payment Type
+    let paymentType = "PIX";
+    let maxInstallmentCount = 1;
 
     // Get environment variables ASAAS_API_KEY
     const { ASAAS_API_KEY } = process.env;
@@ -30,14 +34,22 @@ const handler = async (event) => {
       extraMessage = "Criança isenta de pagamento.";
     }
 
+    // Credit card payment fee
+    if (payment.toLowerCase().includes("cart") && age >= 6) {
+      paymentType = "CREDIT_CARD";
+      maxInstallmentCount = 2;
+      value = value + 5;
+      extraMessage = extraMessage + " Pagamento via cartão de crédito com acréscimo de 5%.";
+    }
+
     var myHeaders = new Headers();
     myHeaders.append("access_token", ASAAS_API_KEY);
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
-      "billingType": "UNDEFINED",
+      "billingType": paymentType,
       "chargeType": "INSTALLMENT",
-      "maxInstallmentCount": 1,
+      "maxInstallmentCount": maxInstallmentCount,
       "callback": {
         "autoRedirect": true,
         "successUrl": "https://www.metodistarenovada.com/retiro-pagamento-obrigado"

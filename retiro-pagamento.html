@@ -32,19 +32,36 @@
         var id = urlParams.get('id');
         var name = urlParams.get('name');
         var age = urlParams.get('age');
+        var payment = urlParams.get('payment');
 
-        var paymentUrl = '/.netlify/functions/retiro-generate-payment-link?id=' + id + '&age=' + age + '&name=' + name + '';
+        // Verify missing parameters
+        if (!id || !name || !age || !payment) {
+            
+            // Insert a button to register again
+            var button = document.createElement('a');
+            button.setAttribute('href', '/retiro');
+            button.setAttribute('class', 'links');
+            button.innerHTML = 'Fazer inscrição';
 
-        // Make a fetch request to paymentUrl
-        fetch(paymentUrl)
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (data) {
-                console.log(data);
-                insertButtonIntoPage(data.result.url);
-                sendPaymentLinkToAirtable(data.result.url, id);
-            });
+            document.getElementById('payment_link').innerHTML = '';
+
+            document.getElementById('payment_link').appendChild(button);
+
+        } else {
+
+            var paymentUrl = '/.netlify/functions/retiro-generate-payment-link?id=' + id + '&age=' + age + '&name=' + name + '&payment=' + payment;
+
+            // Make a fetch request to paymentUrl
+            fetch(paymentUrl)
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    console.log(data);
+                    insertButtonIntoPage(data.result.url);
+                    sendPaymentLinkToAirtable(data.result.url, id);
+                });
+        }
 
         function insertButtonIntoPage(url) {
 
@@ -66,6 +83,20 @@
             button.setAttribute('class', 'links');
             button.setAttribute('onclick', 'copyPaymentLink()');
             button.innerHTML = 'Copiar link de pagamento';
+
+            document.getElementById('payment_link').appendChild(button);
+
+            // Insert a divider
+            var divider = document.createElement('hr');
+            divider.setAttribute('class', 'divider');
+
+            document.getElementById('payment_link').appendChild(divider);
+
+            // Insert a button to register again
+            var button = document.createElement('a');
+            button.setAttribute('href', '/retiro');
+            button.setAttribute('class', 'links');
+            button.innerHTML = 'Fazer outra inscrição';
 
             document.getElementById('payment_link').appendChild(button);
         }
