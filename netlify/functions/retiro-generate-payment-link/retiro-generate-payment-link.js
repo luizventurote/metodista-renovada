@@ -14,7 +14,7 @@ const handler = async (event) => {
     }
 
     // If eventname is not provided, set default value
-    if (!eventname) {
+    if (!eventname || eventname === "" || eventname === "undefined" || eventname === "null") {
       eventname = "Retiro";
     }
 
