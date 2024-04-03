@@ -64,7 +64,7 @@ const handler = async (event) => {
         "autoRedirect": true,
         "successUrl": "https://www.metodistarenovada.com/retiro-pagamento-obrigado"
       },
-      "name": "Inscrição Retiro de Carnaval de 2024: " + name + " (" + id + ")",
+      "name": "Inscrição " + eventname + ": " + name + " (" + id + ")",
       "description": "Inscrição de " + name + " para o " + eventname + " da Igreja Metodista Renovada ("+id+"). " + extraMessage,
       "value": value,
       "notificationEnabled": false,
