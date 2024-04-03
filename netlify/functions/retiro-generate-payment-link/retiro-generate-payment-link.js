@@ -13,9 +13,11 @@ const handler = async (event) => {
       }
     }
 
+    let eventnameText = eventname;
+
     // If eventname is not provided, set default value
-    if (!eventname || eventname === "" || eventname === "undefined" || eventname === "null") {
-      eventname = "Retiro";
+    if (!eventnameText || eventnameText === "" || eventnameText === "undefined" || eventnameText === "null") {
+      eventnameText = "Retiro";
     }
 
     // Payment Type
@@ -64,8 +66,8 @@ const handler = async (event) => {
         "autoRedirect": true,
         "successUrl": "https://www.metodistarenovada.com/retiro-pagamento-obrigado"
       },
-      "name": "Inscrição " + eventname + ": " + name + " (" + id + ")",
-      "description": "Inscrição de " + name + " para o " + eventname + " da Igreja Metodista Renovada ("+id+"). " + extraMessage,
+      "name": "Inscrição " + eventnameText + ": " + name + " (" + id + ")",
+      "description": "Inscrição de " + name + " para o " + eventnameText + " da Igreja Metodista Renovada ("+id+"). " + extraMessage,
       "value": value,
       "notificationEnabled": false,
       "dueDateLimitDays": 3
