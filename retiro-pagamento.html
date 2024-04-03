@@ -62,7 +62,7 @@
                 .then(function (data) {
                     console.log(data);
                     insertButtonIntoPage(data.result.url);
-                    sendPaymentLinkToAirtable(data.result.url, id);
+                    sendPaymentLink(data.result.url, id);
                 });
         }
 
@@ -126,6 +126,19 @@
         function sendPaymentLinkToAirtable(paymentLink, id) {
 
             let webhookUrl = '/.netlify/functions/retiro-send-payment-link-airtable?id=' + id + '&payment_link=' + paymentLink;
+
+            fetch(webhookUrl)
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    console.log(data);
+                });
+        }
+
+        function sendPaymentLink(paymentLink, id) {
+
+            let webhookUrl = 'https://n8n.venturote.com/webhook/retiro-update-payment-link?id=' + id + '&payment-link=' + paymentLink;
 
             fetch(webhookUrl)
                 .then(function (response) {
