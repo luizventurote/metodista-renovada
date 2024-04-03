@@ -33,6 +33,7 @@
         var name = urlParams.get('name');
         var age = urlParams.get('age');
         var payment = urlParams.get('payment');
+        var eventName = urlParams.get('event');
 
         // Verify missing parameters
         if (!id || !name || !age || !payment) {
@@ -52,7 +53,7 @@
 
         } else {
 
-            var paymentUrl = '/.netlify/functions/retiro-generate-payment-link?id=' + id + '&age=' + age + '&name=' + name + '&payment=' + payment;
+            var paymentUrl = '/.netlify/functions/retiro-generate-payment-link?id=' + id + '&age=' + age + '&name=' + name + '&payment=' + payment + '&event=' + eventName;
 
             // Make a fetch request to paymentUrl
             fetch(paymentUrl)

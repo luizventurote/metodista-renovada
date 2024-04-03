@@ -3,7 +3,7 @@ const handler = async (event) => {
   try {
 
     // Get request id, name and age param
-    const { id, name, age, payment } = event.queryStringParameters;
+    const { id, name, age, payment, event } = event.queryStringParameters;
 
     // Verify if request id, name and age param exists
     if (!id || !name || !age || !payment) {
@@ -11,6 +11,11 @@ const handler = async (event) => {
         statusCode: 400,
         body: JSON.stringify({ message: 'Missing parameters' })
       }
+    }
+
+    // If event name is not provided, set default value
+    if (!event) {
+      event = "Retiro";
     }
 
     // Payment Type
@@ -21,27 +26,27 @@ const handler = async (event) => {
     const { ASAAS_API_KEY } = process.env;
 
     // Value of payment link
-    let value = 150;
+    let value = 180;
     let extraMessage = "";
 
-    if (age >= 6 && age <= 10) {
+    if (age >= 5 && age <= 10) {
       value = 100;
       extraMessage = "Valor promocional para criança.";
     }
 
-    if (age < 6) {
+    if (age < 5) {
       value = 0;
       extraMessage = "Criança isenta de pagamento.";
     }
 
     // Credit card payment fee
-    if (payment.toLowerCase().includes("cart") && age >= 6) {
+    if (payment.toLowerCase().includes("cart") && age >= 5) {
       paymentType = "CREDIT_CARD";
       maxInstallmentCount = 3;
-      value = value + 14;
+      value = value + 20;
 
       if ( age <= 10 ) {
-        value = value + 10;
+        value = value + 15;
       }
 
       extraMessage = extraMessage + " Pagamento via cartão de crédito com acréscimo da taxa do cartão.";
@@ -60,7 +65,7 @@ const handler = async (event) => {
         "successUrl": "https://www.metodistarenovada.com/retiro-pagamento-obrigado"
       },
       "name": "Inscrição Retiro de Carnaval de 2024: " + name + " (" + id + ")",
-      "description": "Inscrição de " + name + " para o Retiro de Carnaval de 2024 da Igreja Metodista Renovada ("+id+"). " + extraMessage,
+      "description": "Inscrição de " + name + " para o " + event + " da Igreja Metodista Renovada ("+id+"). " + extraMessage,
       "value": value,
       "notificationEnabled": false,
       "dueDateLimitDays": 3
