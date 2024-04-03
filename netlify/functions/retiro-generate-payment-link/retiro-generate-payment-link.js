@@ -1,9 +1,9 @@
 // Docs on event and context https://docs.netlify.com/functions/build/#code-your-function-2
-const handler = async (e) => {
+const handler = async (event) => {
   try {
 
     // Get request id, name and age param
-    const { id, name, age, payment, event } = event.queryStringParameters;
+    const { id, name, age, payment, eventname } = event.queryStringParameters;
 
     // Verify if request id, name and age param exists
     if (!id || !name || !age || !payment) {
@@ -13,9 +13,9 @@ const handler = async (e) => {
       }
     }
 
-    // If event name is not provided, set default value
-    if (!event) {
-      event = "Retiro";
+    // If eventname is not provided, set default value
+    if (!eventname) {
+      eventname = "Retiro";
     }
 
     // Payment Type
@@ -65,7 +65,7 @@ const handler = async (e) => {
         "successUrl": "https://www.metodistarenovada.com/retiro-pagamento-obrigado"
       },
       "name": "Inscrição Retiro de Carnaval de 2024: " + name + " (" + id + ")",
-      "description": "Inscrição de " + name + " para o " + event + " da Igreja Metodista Renovada ("+id+"). " + extraMessage,
+      "description": "Inscrição de " + name + " para o " + eventname + " da Igreja Metodista Renovada ("+id+"). " + extraMessage,
       "value": value,
       "notificationEnabled": false,
       "dueDateLimitDays": 3
