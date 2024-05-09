@@ -27,7 +27,7 @@
 
             <input class="border-black border rounded-2xl placeholder-[#565656] text-center py-4 px-8" type="tel" name="tel" id="tel" min="9" onkeyup="verificarPreenchimento()" placeholder="Qual é o número do seu telefone?">
 
-            <button id="btn-group" type="submit" class="bg-[#565656] text-center py-4 px-8 rounded-2xl text-white flex gap-3 items-center justify-center">
+            <button id="btn-group" type="submit" disabled class="bg-[#565656] cursor-default text-center py-4 px-8 rounded-2xl text-white flex gap-3 items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29" fill="none">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M14.4959 0.108093C6.77799 0.108093 0.5 6.38784 0.5 14.108C0.5 17.1697 1.48737 20.0091 3.16584 22.3138L1.42143 27.5153L6.80259 25.7955C9.01585 27.2605 11.6571 28.1081 14.5041 28.1081C22.222 28.1081 28.5 21.8281 28.5 14.1082C28.5 6.38808 22.222 0.108325 14.5041 0.108325L14.4959 0.108093ZM10.5875 7.21941C10.316 6.56925 10.1103 6.54463 9.69904 6.52791C9.55901 6.51978 9.40296 6.51166 9.22995 6.51166C8.69493 6.51166 8.13552 6.66798 7.79811 7.01362C7.38686 7.43335 6.36648 8.41265 6.36648 10.421C6.36648 12.4293 7.83108 14.3716 8.02847 14.6434C8.23421 14.9147 10.8838 19.0958 14.9977 20.7998C18.2149 22.1331 19.1695 22.0095 19.9017 21.8532C20.9713 21.6228 22.3126 20.8323 22.65 19.8779C22.9874 18.923 22.9874 18.1081 22.8885 17.9353C22.7898 17.7625 22.5181 17.664 22.1068 17.458C21.6956 17.2521 19.696 16.2645 19.3174 16.1328C18.9471 15.9929 18.5934 16.0424 18.3138 16.4375C17.9188 16.989 17.5322 17.5488 17.2194 17.8861C16.9725 18.1495 16.5692 18.1824 16.232 18.0424C15.7794 17.8533 14.5124 17.4085 12.9489 16.0176C11.7393 14.9395 10.9166 13.5981 10.6781 13.1949C10.4394 12.7835 10.6534 12.5445 10.8425 12.3224C11.0482 12.0671 11.2456 11.8862 11.4513 11.6474C11.6571 11.4089 11.7723 11.2853 11.9039 11.0054C12.044 10.7338 11.945 10.4539 11.8463 10.2481C11.7476 10.0423 10.9249 8.03402 10.5875 7.21941Z" fill="white"/>
                   </svg><span>Participar do Grupo</span>
@@ -65,18 +65,40 @@
                 botao.disabled = false;
                 botao.classList.remove('bg-[#565656]');
                 botao.classList.add('bg-[#67C15E]');
+                botao.classList.add('cursor-pointer');
+                botao.classList.remove('cursor-default');
             } else {
                 // Se estiver vazio, desativa o botão
                 botao.disabled = true;
                 botao.classList.remove('bg-[#67C15E]');
                 botao.classList.add('bg-[#565656]');
+                botao.classList.add('cursor-default');
             }
         }
 
         form.addEventListener('submit', function(event) {
             event.preventDefault();
 
-            changeElements()
+            let formData = new FormData(document.getElementById('form'));
+            let queryString = new URLSearchParams(formData).toString();
+            let urlDestino = 'https://n8n.venturote.com/webhook/form-jovens?' + queryString;
+
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', urlDestino, true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    console.log('Formulário enviado com sucesso!');
+                    console.log(xhr.responseText);
+                } else {
+                    console.error('Erro ao enviar formulário: ' + xhr.status);
+                }
+            };
+            xhr.onerror = function() {
+                console.error('Erro de rede ao enviar formulário.');
+            };
+            xhr.send(formData);
+
+            changeElements();
         });
 
         function changeElements() {
@@ -105,7 +127,6 @@
             Contagem();
         }
 
-        // Função para iniciar a contagem regressiva
         function Contagem() {
             let contadorElemento = document.getElementById('contador');
             let segundos = 5;

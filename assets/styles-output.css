@@ -618,6 +618,22 @@ video {
   max-width: 700px;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.cursor-none {
+  cursor: none;
+}
+
+.cursor-auto {
+  cursor: auto;
+}
+
+.cursor-default {
+  cursor: default;
+}
+
 .flex-col {
   flex-direction: column;
 }
