@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/styles-output.css" rel="stylesheet">
+    <title>Jovens Igreja Metodista Renovada</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+    </style>
+</head>
+<body class="bg-black max-w-[700px] m-auto font-inter">
+
+    <img class="w-full" src="assets/banner-conf-agradecimento.jpg" alt="">
+
+    <section class="">
+        <p class="text-white py-9 px-8 text-center">Nós estamos muito felizes em te receber! <span class="text-yellow-300"> Você é uma pessoa muito especial pra nós e para o Senhor!</span> </p>
+    </section>
+
+    <section class="flex flex-col gap-7 py-9 px-8 text-center bg-white">
+        <p>Se você quiser continuar ligado nas nossas atividades, <strong>fazer amigos legais e se aproximar ainda mais de Deus, participe dos nosso grupo:</strong></p>
+
+        <form id="form" class="flex flex-col gap-4">
+            <input class="border-black border rounded-2xl placeholder-[#565656] text-center py-4 px-8" type="text" name="name" id="name" onkeyup="verificarPreenchimento()" placeholder="Qual é o seu nome?">
+
+            <input class="border-black border rounded-2xl placeholder-[#565656] text-center py-4 px-8" type="number" name="age" id="age" onkeyup="verificarPreenchimento()" min="10" max="35" placeholder="Qual é a sua idade?">
+
+            <input class="border-black border rounded-2xl placeholder-[#565656] text-center py-4 px-8" type="tel" name="tel" id="tel" min="9" onkeyup="verificarPreenchimento()" placeholder="Qual é o número do seu telefone?">
+
+            <button id="btn-group" type="submit" disabled class="bg-[#565656] cursor-default text-center py-4 px-8 rounded-2xl text-white flex gap-3 items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.4959 0.108093C6.77799 0.108093 0.5 6.38784 0.5 14.108C0.5 17.1697 1.48737 20.0091 3.16584 22.3138L1.42143 27.5153L6.80259 25.7955C9.01585 27.2605 11.6571 28.1081 14.5041 28.1081C22.222 28.1081 28.5 21.8281 28.5 14.1082C28.5 6.38808 22.222 0.108325 14.5041 0.108325L14.4959 0.108093ZM10.5875 7.21941C10.316 6.56925 10.1103 6.54463 9.69904 6.52791C9.55901 6.51978 9.40296 6.51166 9.22995 6.51166C8.69493 6.51166 8.13552 6.66798 7.79811 7.01362C7.38686 7.43335 6.36648 8.41265 6.36648 10.421C6.36648 12.4293 7.83108 14.3716 8.02847 14.6434C8.23421 14.9147 10.8838 19.0958 14.9977 20.7998C18.2149 22.1331 19.1695 22.0095 19.9017 21.8532C20.9713 21.6228 22.3126 20.8323 22.65 19.8779C22.9874 18.923 22.9874 18.1081 22.8885 17.9353C22.7898 17.7625 22.5181 17.664 22.1068 17.458C21.6956 17.2521 19.696 16.2645 19.3174 16.1328C18.9471 15.9929 18.5934 16.0424 18.3138 16.4375C17.9188 16.989 17.5322 17.5488 17.2194 17.8861C16.9725 18.1495 16.5692 18.1824 16.232 18.0424C15.7794 17.8533 14.5124 17.4085 12.9489 16.0176C11.7393 14.9395 10.9166 13.5981 10.6781 13.1949C10.4394 12.7835 10.6534 12.5445 10.8425 12.3224C11.0482 12.0671 11.2456 11.8862 11.4513 11.6474C11.6571 11.4089 11.7723 11.2853 11.9039 11.0054C12.044 10.7338 11.945 10.4539 11.8463 10.2481C11.7476 10.0423 10.9249 8.03402 10.5875 7.21941Z" fill="white"/>
+                  </svg><span>Participar do Grupo</span>
+            </button>
+        </form>
+
+        <span id="title-ty" class="font-bold text-[24px] hidden">Muito obrigado 🎉</span>
+
+        <p id="temp-redir" class="hidden">Você será redirecionado para o grupo no WhatsApp em <span id="contador">5</span> segundos...</p>
+
+        <img id="gif-1" class="rounded-2xl" src="assets/gif-1.gif" alt="">
+        <img id="gif-2" class="rounded-2xl hidden" src="assets/gif-2.gif" alt="">
+    </section>
+
+    <img src="assets/foto-7.png" alt="">
+    <img src="assets/foto-6.png" alt="">
+    <img src="assets/foto.jpg" alt="">
+
+    <footer class=" py-9 px-8">
+        <img class="m-auto" src="assets/Logo Igreja Wide.svg" alt="">
+    </footer>
+
+    <script>
+        let botao = document.getElementById('btn-group');
+        let form = document.getElementById('form');
+        let url = '';
+
+        function verificarPreenchimento() {   
+            let age = document.getElementById('age').value;         
+            let name = document.getElementById('name').value;
+            let tel = document.getElementById('tel').value;   
+            // Verifica se a idade está vazio
+            if (age.trim() !== '' & age >= 10 & age <= 35 & name.trim() !== '' & tel.trim() !== '' & tel.length >= 9 & tel.length <= 11) {
+                // Se não estiver vazio, ativa o botão
+                botao.disabled = false;
+                botao.classList.remove('bg-[#565656]');
+                botao.classList.add('bg-[#67C15E]');
+                botao.classList.add('cursor-pointer');
+                botao.classList.remove('cursor-default');
+            } else {
+                // Se estiver vazio, desativa o botão
+                botao.disabled = true;
+                botao.classList.remove('bg-[#67C15E]');
+                botao.classList.add('bg-[#565656]');
+                botao.classList.add('cursor-default');
+            }
+        }
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            let formData = new FormData(document.getElementById('form'));
+            let queryString = new URLSearchParams(formData).toString();
+            let urlDestino = 'https://n8n.venturote.com/webhook/form-jovens?' + queryString;
+
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', urlDestino, true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    console.log('Formulário enviado com sucesso!');
+                    console.log(xhr.responseText);
+                } else {
+                    console.error('Erro ao enviar formulário: ' + xhr.status);
+                }
+            };
+            xhr.onerror = function() {
+                console.error('Erro de rede ao enviar formulário.');
+            };
+            xhr.send(formData);
+
+            changeElements();
+        });
+
+        function changeElements() {
+            let age = document.getElementById('age').value;
+            if (age >= 10 & age <= 14 ){
+                url = 'https://chat.whatsapp.com/GUyvaB0j3tk4d66bzBIvXP';
+            } 
+            else if(age >= 15 & age <=35){
+                url = 'https://chat.whatsapp.com/GppWvblOS4xAgMoEBcuaLd';
+            }
+
+            let temp_redir = document.getElementById('temp-redir');
+            let title_ty = document.getElementById('title-ty');
+            let gif_1 = document.getElementById('gif-1');
+            let gif_2 = document.getElementById('gif-2');
+            let form = document.getElementById('form');
+
+            form.classList.add('hidden');
+            gif_1.classList.add('hidden');
+            title_ty.classList.add('block');
+            title_ty.classList.remove('hidden');
+            temp_redir.classList.add('block');
+            temp_redir.classList.remove('hidden');
+            gif_2.classList.add('block');
+            gif_2.classList.remove('hidden');
+            Contagem();
+        }
+
+        function Contagem() {
+            let contadorElemento = document.getElementById('contador');
+            let segundos = 5;
+
+            let contagem = setInterval(function() {
+                segundos--;
+                contadorElemento.textContent = segundos;
+
+                if (segundos <= 0) {
+                    clearInterval(contagem);
+                    // Redirecionar para outra página
+                    window.location.href = url;
+                }
+            }, 1000);
+        }
+
+    </script>
+</body>
+</html>
