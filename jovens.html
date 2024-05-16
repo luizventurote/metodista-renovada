@@ -60,7 +60,7 @@
             let name = document.getElementById('name').value;
             let tel = document.getElementById('tel').value;   
             // Verifica se a idade está vazio
-            if (age.trim() !== '' & age >= 10 & age <= 35 & name.trim() !== '' & tel.trim() !== '' & tel.length >= 9 & tel.length <= 11) {
+            if (age.trim() !== '' & age >= 1 & age <= 90 & name.trim() !== '' & tel.trim() !== '' & tel.length >= 9 & tel.length <= 11) {
                 // Se não estiver vazio, ativa o botão
                 botao.disabled = false;
                 botao.classList.remove('bg-[#565656]');
@@ -103,10 +103,10 @@
 
         function changeElements() {
             let age = document.getElementById('age').value;
-            if (age >= 10 & age <= 14 ){
+            if (age >= 1 & age <= 16 ){
                 url = 'https://chat.whatsapp.com/GUyvaB0j3tk4d66bzBIvXP';
             } 
-            else if(age >= 15 & age <=35){
+            else if(age >= 17 & age <= 90){
                 url = 'https://chat.whatsapp.com/GppWvblOS4xAgMoEBcuaLd';
             }
 
