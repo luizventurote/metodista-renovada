@@ -1,9 +1,11 @@
 module.exports = {
   content: [
-    './avisos-jovens.html'
+    './avisos-jovens.html','./jovens.html'
   ],
   theme: {
-    extend: {},
+    fontFamily: {
+      'inter': ["'Inter'", 'Georgia'],
+    }
   },
   plugins: [],
 }
