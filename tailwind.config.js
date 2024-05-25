@@ -1,6 +1,6 @@
 module.exports = {
   content: [
-    './avisos-jovens.html','./jovens.html'
+    '*.html'
   ],
   theme: {
     fontFamily: {
