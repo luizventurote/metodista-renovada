@@ -63,6 +63,20 @@
             <img class="m-auto" src="assets/Logo Igreja Wide.svg" alt="Igreja Metodista Renovada">
         </footer>
 
+        <script>
+
+            // If you has params pagamento=confirmado change button to thank you
+            const urlParams = new URLSearchParams(window.location.search);
+
+            if (urlParams.has('pagamento') && urlParams.get('pagamento') === 'confirmado') {
+                document.querySelector('h1').innerText = 'Obrigado por sua oferta!';
+                document.querySelector('p').innerText = 'Sua contribuição é muito importante para a construção da nossa nova sede.';
+                document.querySelector('p').style.marginBottom = '40px';
+                document.querySelector('a').remove();
+            }
+
+        </script>
+
     </div>
 
 </body>
