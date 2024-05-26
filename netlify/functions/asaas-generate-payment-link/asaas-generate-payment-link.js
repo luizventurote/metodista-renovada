@@ -1,6 +1,9 @@
 // Docs on event and context https://docs.netlify.com/functions/build/#code-your-function-2
 const handler = async (event) => {
     try {
+
+      // Get environment variables ASAAS_API_KEY
+      const { ASAAS_API_KEY } = process.env;
   
       var myHeaders = new Headers();
       myHeaders.append("access_token", ASAAS_API_KEY);
