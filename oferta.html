@@ -53,7 +53,13 @@
 
         <p>Ofertas de fé para a construção da nova sede da Igreja Metodista Renovada de Colatina.</p>
 
-        <a href="https://www.asaas.com/c/wm096s0k1njbc2tv" class="bg-[#00ffc2] rounded-md py-3 px-8 text-black font-bold inline-flex my-10 transition-all hover:scale-105">Fazer minha oferta</a>
+        <div class="flex flex-col my-10 gap-5 justify-center max-w-[300px] m-auto">
+
+            <a id="btn_pix" href="https://www.asaas.com/c/w7gligy1rqisylpl" class="bg-[#00ffc2] border border-[#00ffc2] solid text-center flex justify-center rounded-md py-3 px-8 text-black font-bold transition-all hover:scale-105">Fazer oferta no PIX</a>
+
+            <a id="btn_cartao" href="https://www.asaas.com/c/5ivcwu878t047xly" class="border border-white solid rounded-md py-3 text-center flex justify-center px-8 text-white font-bold transition-all hover:scale-105">Fazer oferta no Cartão</a>
+        
+        </div>
 
         <p class="mt-3 bg-gray-600 p-5 rounded-t-md italic">"O tamanho da fé é o que define o tamanho de uma igreja, pois nosso limite de expansão depende do quanto acreditamos"</p>
         
@@ -72,7 +78,8 @@
                 document.querySelector('h1').innerText = 'Obrigado por sua oferta!';
                 document.querySelector('p').innerText = 'Sua contribuição é muito importante para a construção da nossa nova sede.';
                 document.querySelector('p').style.marginBottom = '40px';
-                document.querySelector('a').remove();
+                document.querySelector('#btn_pix').remove();
+                document.querySelector('#btn_cartao').remove();
             }
 
         </script>
