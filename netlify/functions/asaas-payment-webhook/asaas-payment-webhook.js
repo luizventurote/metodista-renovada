@@ -443,8 +443,10 @@ const handler = async (event) => {
     try {
       webhookData = JSON.parse(event.body);
     } catch (parseError) {
+      // Return 200 to prevent Asaas from pausing the webhook
+      // Log error in response body for debugging
       return {
-        statusCode: 400,
+        statusCode: 200,
         body: JSON.stringify({ message: 'Invalid JSON payload', error: parseError.toString() })
       };
     }
@@ -531,8 +533,10 @@ const handler = async (event) => {
         });
       }
 
+      // Always return 200 to prevent Asaas from pausing the webhook
+      // Errors are logged to Slack and included in the response body
       return {
-        statusCode: eventResult.success ? 200 : 400,
+        statusCode: 200,
         body: JSON.stringify({
           message: eventResult.success 
             ? 'Payment confirmed and processed successfully' 
