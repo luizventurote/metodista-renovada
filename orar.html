@@ -23,6 +23,8 @@
 
     <title>Faça a sua oferta - Igreja Metodista Renovada</title>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/background-timer/1.0.0/background-timer.min.js"></script>
+
     <!-- Facebook Meta Tags -->
     <!-- <meta property="og:url" content="https://metodista.org/oferta">
     <meta property="og:type" content="website">
@@ -71,6 +73,10 @@
                 class="hidden flex border border-white solid rounded-md py-3 text-center justify-center px-8 text-white font-bold transition-all hover:scale-105">Continuar
                 orando</button>
 
+            <button data-timer-delete
+                class="hidden flex border border-red-500 solid rounded-md py-3 text-center justify-center px-8 text-red-500 font-bold transition-all hover:scale-105">Cancelar
+                oração</button>
+
         </div>
 
         <div datat-thankyou-screen class="hidden flex flex-col my-10 gap-5 justify-center max-w-[300px] m-auto">
@@ -99,11 +105,15 @@
         const timerSend = document.querySelector('[data-timer-send]');
         const timerPlay = document.querySelector('[data-timer-play]');
         const timerReset = document.querySelector('[data-timer-reset]');
+        const timerDelete = document.querySelector('[data-timer-delete]');
         const timerScreen = document.querySelector('[data-timer-screen]');
         const thankyouScreen = document.querySelector('[datat-thankyou-screen]');
 
         let time = 0;
         let interval;
+
+        let startTime;
+        let elapsedTime = 0;  // Store the elapsed time if the user pauses
         
         let userName = localStorage.getItem('userName') || '';
         let userPhone = localStorage.getItem('userPhone') || '';
@@ -111,12 +121,19 @@
 
         // Timer with hours, minutes and seconds. Displayed in a div like this: 00:00:00
         function startTimer() {
+
+            startTime = Date.now() - elapsedTime;  // Adjust for elapsed time if the timer was paused
+
             interval = setInterval(() => {
-                time++;
+
+                const currentTime = Date.now();
+                time = Math.floor((currentTime - startTime) / 1000);  // Calculate elapsed seconds
+
                 const hours = Math.floor(time / 3600);
                 const minutes = Math.floor((time % 3600) / 60);
                 const seconds = time % 60;
                 timer.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            
             }, 1000);
         }
 
@@ -124,8 +141,16 @@
             timerInit.classList.add('hidden');
         }
 
+        function showStartButton() {
+            timerInit.classList.remove('hidden');
+        }
+
         function showTimer() {
             timer.classList.remove('hidden');
+        }
+
+        function hideTimer() {
+            timer.classList.add('hidden');
         }
 
         function showPauseButton() {
@@ -152,6 +177,14 @@
             timerPlay.classList.add('hidden');
         }
 
+        function showDeleteButton() {
+            timerDelete.classList.remove('hidden');
+        }
+
+        function hideDeleteButton() {
+            timerDelete.classList.add('hidden');
+        }
+
         function showThankYouScreen() {
             timerScreen.classList.add('hidden');
             thankyouScreen.classList.remove('hidden');
@@ -168,6 +201,7 @@
             timer.textContent = '00:00:00';
             hidePlayButton();
             hideSendButton();
+            hideDeleteButton();
         }
 
         function sendPrayer() {
@@ -218,6 +252,7 @@
             hidePauseButton();
             showSendButton();
             showPlayButton();
+            showDeleteButton();
         });
 
         timerPlay.addEventListener('click', () => {
@@ -225,6 +260,7 @@
             hidePlayButton();
             hideSendButton();
             showPauseButton();
+            hideDeleteButton();
         });
 
         timerSend.addEventListener('click', () => {
@@ -241,7 +277,15 @@
             startTimer();
         });
 
+        timerDelete.addEventListener('click', () => {
 
+            // Show a confirmation dialog
+            if (confirm('Tem certeza que deseja cancelar a oração?')) {
+                hideThankYouScreen();
+                resetTimer();
+                showPlayButton();
+            }
+        });
 
     </script>
 
