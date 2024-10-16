@@ -53,25 +53,35 @@
 
         <div data-timer-screen class="flex flex-col my-10 gap-5 justify-center max-w-[300px] m-auto">
 
-            <button data-timer-init class="bg-[#00ffc2] m-auto text-black font-bold w-[220px] h-[220px] p-10 rounded-full">Iniciar Oração</button>
+            <button data-timer-init
+                class="bg-[#00ffc2] m-auto text-black font-bold w-[220px] h-[220px] p-10 rounded-full">Iniciar
+                Oração</button>
 
             <div data-timer class="hidden py-10 text-5xl">00:00:00</div>
 
-            <button data-timer-pause class="hidden flex border border-white solid rounded-md py-3 text-center justify-center px-8 text-white font-bold transition-all hover:scale-105">Pausar Oração</button>
-            
-            <button data-timer-send class="hidden flex bg-[#00ffc2] text-black solid rounded-md py-3 text-center justify-center px-8 font-bold transition-all hover:scale-105">Enviar Oração</button>
+            <button data-timer-pause
+                class="hidden flex border border-white solid rounded-md py-3 text-center justify-center px-8 text-white font-bold transition-all hover:scale-105">Pausar
+                Oração</button>
 
-            <button data-timer-play class="hidden flex border border-white solid rounded-md py-3 text-center justify-center px-8 text-white font-bold transition-all hover:scale-105">Continuar orando</button>
-            
+            <button data-timer-send
+                class="hidden flex bg-[#00ffc2] text-black solid rounded-md py-3 text-center justify-center px-8 font-bold transition-all hover:scale-105">Enviar
+                Oração</button>
+
+            <button data-timer-play
+                class="hidden flex border border-white solid rounded-md py-3 text-center justify-center px-8 text-white font-bold transition-all hover:scale-105">Continuar
+                orando</button>
+
         </div>
 
         <div datat-thankyou-screen class="hidden flex flex-col my-10 gap-5 justify-center max-w-[300px] m-auto">
 
             <h2 class="text-2xl mt-10 mb-7 font-bold">Obrigado por orar</h2>
 
-            <p>Que Deus abençoe a sua vida e a vida da nossa igreja.</p>
+            <p>Que Deus abençoe a sua vida e a nossa igreja 🙏</p>
 
-            <button data-timer-reset class="flex border border-white solid rounded-md py-3 text-center justify-center px-8 text-white font-bold transition-all hover:scale-105">Continuar orando</button>
+            <button data-timer-reset
+                class="flex border border-white solid rounded-md py-3 text-center justify-center px-8 text-white font-bold transition-all hover:scale-105">Continuar
+                orando</button>
 
         </div>
 
@@ -94,6 +104,10 @@
 
         let time = 0;
         let interval;
+        
+        let userName = localStorage.getItem('userName') || '';
+        let userPhone = localStorage.getItem('userPhone') || '';
+        let userEmail = localStorage.getItem('userEmail') || '';
 
         // Timer with hours, minutes and seconds. Displayed in a div like this: 00:00:00
         function startTimer() {
@@ -157,7 +171,38 @@
         }
 
         function sendPrayer() {
+
             console.log('Prayer sent', time);
+
+            // Inform user name
+            if (!userName) {
+                userName = prompt('Qual é o seu nome?');
+                localStorage.setItem('userName', userName);
+            }
+
+            // Inform user phone
+            if (!userPhone) {
+                userPhone = prompt('Qual é o seu telefone?');
+                localStorage.setItem('userPhone', userPhone);
+            }
+
+            // Send prayer to the server
+            fetch('https://n8n.venturote.com/webhook/enviar-oracao', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    time: time,
+                    date: new Date().toISOString(),
+                    name: userName,
+                    phone: userPhone
+                }),
+            }).then(response => response.json()).then(data => {
+                console.log('Success:', data);
+            }).catch((error) => {
+                console.error('Error:', error);
+            });
         }
 
         timerInit.addEventListener('click', () => {
