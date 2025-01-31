@@ -56,6 +56,8 @@
             // Check if age is lower than 5 years old
             if (age < 5) {
 
+                sendPaymentLink('isento', id);
+
                 // Redirect to https://metodista.org/retiro-pagamento-obrigado.html
                 window.location.href = 'https://metodista.org/retiro-pagamento-obrigado.html';
             
