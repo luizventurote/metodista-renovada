@@ -53,18 +53,28 @@
 
         } else {
 
-            var paymentUrl = '/.netlify/functions/retiro-generate-payment-link?id=' + id + '&age=' + age + '&name=' + name + '&payment=' + payment + '&eventname=' + eventName;
+            // Check if age is lower than 5 years old
+            if (age < 5) {
 
-            // Make a fetch request to paymentUrl
-            fetch(paymentUrl)
-                .then(function (response) {
-                    return response.json();
-                })
-                .then(function (data) {
-                    console.log(data);
-                    insertButtonIntoPage(data.result.url);
-                    sendPaymentLink(data.result.url, id);
-                });
+                // Redirect to https://metodista.org/retiro-pagamento-obrigado.html
+                window.location.href = 'https://metodista.org/retiro-pagamento-obrigado.html';
+            
+            } else {
+
+                var paymentUrl = '/.netlify/functions/retiro-generate-payment-link?id=' + id + '&age=' + age + '&name=' + name + '&payment=' + payment + '&eventname=' + eventName;
+
+                // Make a fetch request to paymentUrl
+                fetch(paymentUrl)
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (data) {
+                        console.log(data);
+                        insertButtonIntoPage(data.result.url);
+                        sendPaymentLink(data.result.url, id);
+                    });
+
+            }
         }
 
         function insertButtonIntoPage(url) {
