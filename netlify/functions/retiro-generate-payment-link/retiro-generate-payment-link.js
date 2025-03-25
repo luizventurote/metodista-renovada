@@ -44,7 +44,7 @@ const handler = async (event) => {
     // Credit card payment fee
     if (payment.toLowerCase().includes("cart") && age >= 5) {
       paymentType = "CREDIT_CARD";
-      maxInstallmentCount = 3;
+      maxInstallmentCount = 1; // TODO: Change to 3
 
       value = value + 10;
 
