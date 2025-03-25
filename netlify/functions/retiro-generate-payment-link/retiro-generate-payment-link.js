@@ -28,7 +28,7 @@ const handler = async (event) => {
     const { ASAAS_API_KEY } = process.env;
 
     // Value of payment link
-    let value = 150;
+    let value = 60;
     let extraMessage = "";
 
     if (age >= 5 && age <= 10) {
@@ -46,7 +46,7 @@ const handler = async (event) => {
       paymentType = "CREDIT_CARD";
       maxInstallmentCount = 3;
 
-      value = value + 15;
+      value = value + 10;
 
       extraMessage = extraMessage + " Pagamento via cartão de crédito com acréscimo da taxa do cartão.";
     }
