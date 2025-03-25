@@ -151,6 +151,7 @@
 
         function sendPaymentLink(paymentLink, id) {
 
+            // https://n8n.venturote.com/webhook-test/retiro-update-payment-link?id=eqZ8qEo&payment-link=xxxxx
             let webhookUrl = 'https://n8n.venturote.com/webhook/retiro-update-payment-link?id=' + id + '&payment-link=' + paymentLink;
 
             fetch(webhookUrl)
