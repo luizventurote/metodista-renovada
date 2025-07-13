@@ -28,7 +28,7 @@ const handler = async (event) => {
     const { ASAAS_API_KEY } = process.env;
 
     // Value of payment link
-    let value = 165;
+    let value = 130;
     let extraMessage = "";
 
     if (age >= 5 && age <= 10) {
