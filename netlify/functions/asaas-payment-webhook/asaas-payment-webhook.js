@@ -133,16 +133,20 @@ const handler = async (event) => {
     }
 
     // Step 2: Check payment status
-    // Asaas webhook events: PAYMENT_RECEIVED, PAYMENT_CONFIRMED, etc.
+    // Asaas webhook events:
+    // - PAYMENT_CONFIRMED: Definitive confirmation (recommended)
+    // - PAYMENT_RECEIVED: Payment received (may be temporary, especially for PIX)
+    // We accept both, but PAYMENT_CONFIRMED is more reliable
     const eventType = webhookData.event || webhookData.action || '';
     const paymentStatus = webhookData.payment?.status || webhookData.status || '';
     
-    // Only process confirmed/received payments
+    // Process confirmed or received payments
+    // Note: PAYMENT_CONFIRMED is definitive, PAYMENT_RECEIVED may be reversed
     const isPaymentConfirmed = 
-      eventType === 'PAYMENT_RECEIVED' || 
       eventType === 'PAYMENT_CONFIRMED' ||
-      paymentStatus === 'RECEIVED' ||
+      eventType === 'PAYMENT_RECEIVED' ||
       paymentStatus === 'CONFIRMED' ||
+      paymentStatus === 'RECEIVED' ||
       paymentStatus === 'RECEIVED_IN_CASH_OFFLINE';
 
     if (!isPaymentConfirmed) {
