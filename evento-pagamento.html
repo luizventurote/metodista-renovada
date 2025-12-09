@@ -27,6 +27,7 @@
 
         const REGISTER_URL = 'https://metodista.org/virada';
         const THANKYOU_URL = 'https://metodista.org/evento-pagamento-obrigado';
+        const MINIMUM_AGE_TO_PAY = 6;
 
         // Get the URL parameters
         var urlParams = new URLSearchParams(window.location.search);
@@ -56,10 +57,11 @@
 
         } else {
 
-            // Check if age is lower than 5 years old
-            if (age < 5) {
+            // Check if age is lower than minimum age
+            if (age < MINIMUM_AGE_TO_PAY) {
 
                 sendPaymentLink('isento', id);
+                sendExemptRegistrationEmail(id, name, eventName);
 
                 // Redirect to the thank you page
                 window.location.href = THANKYOU_URL;
@@ -166,6 +168,22 @@
                 })
                 .catch(function (error) {
                     console.error('Error sending registration email:', error);
+                });
+        }
+
+        function sendExemptRegistrationEmail(id, name, eventName) {
+
+            let emailUrl = '/.netlify/functions/send-exempt-registration-email?id=' + id + '&name=' + encodeURIComponent(name) + '&event=' + encodeURIComponent(eventName || '');
+
+            fetch(emailUrl)
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    console.log(data);
+                })
+                .catch(function (error) {
+                    console.error('Error sending exempt registration email:', error);
                 });
         }
 
