@@ -63,6 +63,102 @@ const updateRecord = async (baseId, tableName, recordId, fields, apiKey) => {
   return updateResult;
 };
 
+// Helper function to send log to Slack
+const sendSlackLog = async (webhookUrl, data) => {
+  if (!webhookUrl) {
+    return; // Silently fail if Slack webhook is not configured
+  }
+
+  try {
+    const slackMessage = {
+      text: `💰 Pagamento Processado - Asaas Webhook`,
+      blocks: [
+        {
+          type: "header",
+          text: {
+            type: "plain_text",
+            text: "💰 Pagamento Processado",
+            emoji: true
+          }
+        },
+        {
+          type: "section",
+          fields: [
+            {
+              type: "mrkdwn",
+              text: `*ID da Inscrição:*\n${data.inscriptionId || 'N/A'}`
+            },
+            {
+              type: "mrkdwn",
+              text: `*Evento:*\n${data.eventType || 'N/A'}`
+            },
+            {
+              type: "mrkdwn",
+              text: `*Status:*\n${data.paymentStatus || 'N/A'}`
+            },
+            {
+              type: "mrkdwn",
+              text: `*Valor:*\n${data.amount ? `R$ ${data.amount.toFixed(2)}` : 'N/A'}`
+            },
+            {
+              type: "mrkdwn",
+              text: `*Nome:*\n${data.userName || 'N/A'}`
+            },
+            {
+              type: "mrkdwn",
+              text: `*Email:*\n${data.userEmail || 'N/A'}`
+            },
+            {
+              type: "mrkdwn",
+              text: `*Status Atualizado:*\n${data.statusUpdated ? '✅ Sim' : '❌ Não'}`
+            },
+            {
+              type: "mrkdwn",
+              text: `*Email Enviado:*\n${data.emailSent ? '✅ Sim' : '❌ Não'}`
+            }
+          ]
+        }
+      ]
+    };
+
+    // Add error message if present
+    if (data.error) {
+      slackMessage.blocks.push({
+        type: "section",
+        text: {
+          type: "mrkdwn",
+          text: `*⚠️ Erro:*\n\`\`\`${data.error}\`\`\``
+        }
+      });
+    }
+
+    // Add timestamp
+    slackMessage.blocks.push({
+      type: "context",
+      elements: [
+        {
+          type: "mrkdwn",
+          text: `🕐 ${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}`
+        }
+      ]
+    });
+
+    const slackOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(slackMessage),
+      redirect: 'follow'
+    };
+
+    await fetch(webhookUrl, slackOptions);
+  } catch (error) {
+    // Log error but don't fail the webhook processing
+    console.error('Failed to send Slack notification:', error);
+  }
+};
+
 const handler = async (event) => {
   try {
     // Verify it's a POST request
@@ -85,7 +181,7 @@ const handler = async (event) => {
     }
 
     // Get environment variables
-    const { RESEND_API_KEY, AIRTABLE_API_KEY } = process.env;
+    const { RESEND_API_KEY, AIRTABLE_API_KEY, SLACK_WEBHOOK_URL } = process.env;
 
     if (!RESEND_API_KEY) {
       return {
@@ -122,6 +218,15 @@ const handler = async (event) => {
     }
 
     if (!inscriptionId) {
+      // Log to Slack if configured
+      if (SLACK_WEBHOOK_URL) {
+        await sendSlackLog(SLACK_WEBHOOK_URL, {
+          error: 'Could not extract ID da Inscrição from webhook data',
+          description: description,
+          name: name
+        });
+      }
+
       return {
         statusCode: 400,
         body: JSON.stringify({ 
@@ -150,6 +255,16 @@ const handler = async (event) => {
       paymentStatus === 'RECEIVED_IN_CASH_OFFLINE';
 
     if (!isPaymentConfirmed) {
+      // Log to Slack if configured
+      if (SLACK_WEBHOOK_URL) {
+        await sendSlackLog(SLACK_WEBHOOK_URL, {
+          inscriptionId: inscriptionId,
+          eventType: eventType,
+          paymentStatus: paymentStatus,
+          error: 'Payment not confirmed yet, skipping'
+        });
+      }
+
       return {
         statusCode: 200,
         body: JSON.stringify({ 
@@ -164,6 +279,16 @@ const handler = async (event) => {
     const record = await findRecordFull(BASE_ID, TABLE_NAME, SEARCH_FIELD, inscriptionId, AIRTABLE_API_KEY);
 
     if (!record) {
+      // Log to Slack if configured
+      if (SLACK_WEBHOOK_URL) {
+        await sendSlackLog(SLACK_WEBHOOK_URL, {
+          inscriptionId: inscriptionId,
+          eventType: eventType,
+          paymentStatus: paymentStatus,
+          error: `Record with Id da Inscrição "${inscriptionId}" not found`
+        });
+      }
+
       return {
         statusCode: 404,
         body: JSON.stringify({ 
@@ -190,6 +315,24 @@ const handler = async (event) => {
         // Update status even if email is missing
         await updateRecord(BASE_ID, TABLE_NAME, record.id, fieldsToUpdate, AIRTABLE_API_KEY);
         
+        // Log to Slack if configured
+        if (SLACK_WEBHOOK_URL) {
+          const userName = record.fields['Nome'] || record.fields['name'] || 'Usuário';
+          const paymentAmount = webhookData.payment?.value || webhookData.value || null;
+          
+          await sendSlackLog(SLACK_WEBHOOK_URL, {
+            inscriptionId: inscriptionId,
+            eventType: eventType,
+            paymentStatus: paymentStatus,
+            userName: userName,
+            userEmail: 'N/A',
+            amount: paymentAmount,
+            statusUpdated: true,
+            emailSent: false,
+            error: 'User email not found in Airtable record'
+          });
+        }
+        
         return {
           statusCode: 400,
           body: JSON.stringify({ 
@@ -205,6 +348,9 @@ const handler = async (event) => {
 
       // Get user name from record
       const userName = record.fields['Nome'] || record.fields['name'] || 'Usuário';
+
+      // Get payment amount from webhook data
+      const paymentAmount = webhookData.payment?.value || webhookData.value || null;
 
       // Send email via Resend
       const emailSubject = `Pagamento Confirmado - ${eventName}`;
@@ -251,6 +397,21 @@ const handler = async (event) => {
         // Update status even if email fails
         await updateRecord(BASE_ID, TABLE_NAME, record.id, fieldsToUpdate, AIRTABLE_API_KEY);
         
+        // Log error to Slack if configured
+        if (SLACK_WEBHOOK_URL) {
+          await sendSlackLog(SLACK_WEBHOOK_URL, {
+            inscriptionId: inscriptionId,
+            eventType: eventType,
+            paymentStatus: paymentStatus,
+            userName: userName,
+            userEmail: userEmail,
+            amount: paymentAmount,
+            statusUpdated: true,
+            emailSent: false,
+            error: `Failed to send email via Resend: ${JSON.stringify(resendResult)}`
+          });
+        }
+        
         return {
           statusCode: resendResponse.status,
           body: JSON.stringify({ 
@@ -267,6 +428,38 @@ const handler = async (event) => {
         : [TAG_EMAIL_PAGAMENTO];
 
       fieldsToUpdate[TAGS_FIELD] = updatedTags;
+
+      // Log successful email send to Slack
+      if (SLACK_WEBHOOK_URL) {
+        await sendSlackLog(SLACK_WEBHOOK_URL, {
+          inscriptionId: inscriptionId,
+          eventType: eventType,
+          paymentStatus: paymentStatus,
+          userName: userName,
+          userEmail: userEmail,
+          amount: paymentAmount,
+          statusUpdated: true,
+          emailSent: true
+        });
+      }
+    } else {
+      // Log status update only (email already sent) to Slack
+      if (SLACK_WEBHOOK_URL) {
+        const userName = record.fields['Nome'] || record.fields['name'] || 'Usuário';
+        const userEmail = record.fields[EMAIL_FIELD] || 'N/A';
+        const paymentAmount = webhookData.payment?.value || webhookData.value || null;
+
+        await sendSlackLog(SLACK_WEBHOOK_URL, {
+          inscriptionId: inscriptionId,
+          eventType: eventType,
+          paymentStatus: paymentStatus,
+          userName: userName,
+          userEmail: userEmail,
+          amount: paymentAmount,
+          statusUpdated: true,
+          emailSent: false
+        });
+      }
     }
 
     // Step 7: Update record in Airtable
@@ -283,6 +476,18 @@ const handler = async (event) => {
     }
 
   } catch (error) {
+    // Log error to Slack if configured
+    const { SLACK_WEBHOOK_URL } = process.env;
+    if (SLACK_WEBHOOK_URL) {
+      try {
+        await sendSlackLog(SLACK_WEBHOOK_URL, {
+          error: `Internal server error: ${error.toString()}`
+        });
+      } catch (slackError) {
+        console.error('Failed to send error to Slack:', slackError);
+      }
+    }
+
     return { 
       statusCode: 500, 
       body: JSON.stringify({ message: 'Internal server error', error: error.toString() })
