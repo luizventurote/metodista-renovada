@@ -280,12 +280,12 @@ Inscrição de {name} para {eventname} da Igreja Metodista Renovada ({id}). {ext
 1. **Email de Inscrição:**
    - Assunto: "Inscrição Realizada com Sucesso - {event}"
    - Conteúdo: Confirmação de inscrição com link de pagamento
-   - Remetente: `contato@metodistarenovada.com`
+   - Remetente: `luiz@metodistarenovada.com`
 
 2. **Email de Confirmação de Pagamento:**
    - Assunto: "Pagamento Confirmado - {event}"
    - Conteúdo: Confirmação de pagamento bem-sucedido
-   - Remetente: `contato@metodistarenovada.com`
+   - Remetente: `luiz@metodistarenovada.com`
 
 ### Tally.so
 

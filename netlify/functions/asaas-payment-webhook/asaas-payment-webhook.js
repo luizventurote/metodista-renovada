@@ -286,9 +286,8 @@ const sendPaymentConfirmationEmail = async (apiKey, userEmail, userName, eventNa
         <h2 style="color: #2c3e50;">Pagamento Confirmado!</h2>
         <p>Olá <strong>${userName}</strong>,</p>
         <p>Seu pagamento para o evento <strong>${eventName}</strong> foi confirmado com sucesso!</p>
-        <p>Sua inscrição está completa e confirmada. Em breve você receberá mais informações sobre o evento.</p>
-        <p style="margin-top: 30px; font-size: 12px; color: #666;">Este é um email automático, por favor não responda.</p>
-      </div>
+        <p>Sua inscrição está completa e confirmada.</p>
+     </div>
     </body>
     </html>
   `;
@@ -298,7 +297,7 @@ const sendPaymentConfirmationEmail = async (apiKey, userEmail, userName, eventNa
   resendHeaders.append("Content-Type", "application/json");
 
   const resendBody = JSON.stringify({
-    from: "contato@metodistarenovada.com",
+    from: "luiz@metodistarenovada.com",
     to: userEmail,
     subject: emailSubject,
     html: emailHtml

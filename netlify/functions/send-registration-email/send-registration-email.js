@@ -170,7 +170,6 @@ const handler = async (event) => {
           <p>Sua inscrição para o evento <strong>${eventName}</strong> foi realizada com sucesso!</p>
           <p>Para finalizar sua inscrição, você precisa realizar o pagamento. Clique no link abaixo para realizar o pagamento:</p>
           <p style="word-break: break-all; color: #0066cc;">${payment_link}</p>
-          <p style="margin-top: 30px; font-size: 12px; color: #666;">Este é um email automático.</p>
         </div>
       </body>
       </html>
@@ -181,7 +180,7 @@ const handler = async (event) => {
     resendHeaders.append("Content-Type", "application/json");
 
     const resendBody = JSON.stringify({
-      from: "contato@metodistarenovada.com",
+      from: "luiz@metodistarenovada.com",
       to: userEmail,
       subject: emailSubject,
       html: emailHtml
