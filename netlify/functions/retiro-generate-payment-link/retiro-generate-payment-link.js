@@ -2,7 +2,7 @@
 const handler = async (event) => {
   try {
 
-    const THANKYOU_URL = 'https://metodista.org/event-pagamento-obrigado';
+    const THANKYOU_URL = 'https://www.metodistarenovada.com/event-pagamento-obrigado';
     const MIN_AGE_FOR_PAYMENT = 6;
 
     // Get request id, name and age param
