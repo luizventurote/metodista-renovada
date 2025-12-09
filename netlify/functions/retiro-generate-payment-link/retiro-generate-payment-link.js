@@ -2,6 +2,9 @@
 const handler = async (event) => {
   try {
 
+    const THANKYOU_URL = 'https://metodista.org/event-pagamento-obrigado';
+    const MIN_AGE_FOR_PAYMENT = 6;
+
     // Get request id, name and age param
     const { id, name, age, payment, eventname } = event.queryStringParameters;
 
@@ -28,21 +31,21 @@ const handler = async (event) => {
     const { ASAAS_API_KEY } = process.env;
 
     // Value of payment link
-    let value = 130;
+    let value = 135;
     let extraMessage = "";
 
-    if (age >= 5 && age <= 10) {
-      value = 105;
+    if (age >= MIN_AGE_FOR_PAYMENT && age <= 10) {
+      value = 100;
       extraMessage = "Valor promocional para criança.";
     }
 
-    if (age < 5) {
+    if (age < MIN_AGE_FOR_PAYMENT) {
       value = 0;
       extraMessage = "Criança isenta de pagamento.";
     }
 
     // Credit card payment fee
-    if (payment.toLowerCase().includes("cart") && age >= 5) {
+    if (payment.toLowerCase().includes("cart") && age >= MIN_AGE_FOR_PAYMENT) {
       paymentType = "CREDIT_CARD";
       maxInstallmentCount = 3;
 
@@ -61,10 +64,10 @@ const handler = async (event) => {
       "maxInstallmentCount": maxInstallmentCount,
       "callback": {
         "autoRedirect": true,
-        "successUrl": "https://www.metodistarenovada.com/retiro-pagamento-obrigado"
+        "successUrl": THANKYOU_URL
       },
       "name": "Inscrição " + eventnameText + ": " + name + " (" + id + ")",
-      "description": "Inscrição de " + name + " para o " + eventnameText + " da Igreja Metodista Renovada ("+id+"). " + extraMessage,
+      "description": "Inscrição de " + name + " para " + eventnameText + " da Igreja Metodista Renovada ("+id+"). " + extraMessage,
       "value": value,
       "notificationEnabled": false,
       "dueDateLimitDays": 3

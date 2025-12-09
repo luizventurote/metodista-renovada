@@ -1,0 +1,173 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Pagamento - Igreja Metodista Renovada</title>
+    <meta name="robots" content="noindex" />
+</head>
+
+<body>
+
+    <div style="max-width: 330px;text-align: center;margin: auto;padding: 50px 0 10px;">
+
+        <h1 style="line-height: 38px;">Pagamento</h1>
+
+        <p id="main_text">Nós recebemos os seus dados corretamente! Agora você precisa realizar o pagamento para finalizar a sua
+            inscrição.</p>
+
+    </div>
+
+    <div id="payment_link">
+        <a href="#" class="links" style="opacity: 0.6;">Carregando...</a>
+    </div>
+
+    <script>
+
+        const REGISTER_URL = 'https://metodista.org/virada';
+        const THANKYOU_URL = 'https://metodista.org/event-pagamento-obrigado';
+
+        // Get the URL parameters
+        var urlParams = new URLSearchParams(window.location.search);
+
+        // Get id, name and payment_method
+        var id = urlParams.get('id');
+        var name = urlParams.get('name');
+        var age = urlParams.get('age');
+        var payment = urlParams.get('payment');
+        var eventName = urlParams.get('event');
+
+        // Verify missing parameters
+        if (!id || !name || !age || !payment) {
+            
+            // Insert a button to register again
+            var button = document.createElement('a');
+            button.setAttribute('href', REGISTER_URL);
+            button.setAttribute('class', 'links');
+            button.innerHTML = 'Fazer inscrição';
+
+            document.getElementById('payment_link').innerHTML = '';
+
+            document.getElementById('payment_link').appendChild(button);
+
+            // Change the main text
+            document.getElementById('main_text').innerHTML = 'Parece que você não preencheu todos os dados corretamente. Por favor, tente novamente ou entre em contato com a igreja.';
+
+        } else {
+
+            // Check if age is lower than 5 years old
+            if (age < 5) {
+
+                sendPaymentLink('isento', id);
+
+                // Redirect to the thank you page
+                window.location.href = THANKYOU_URL;
+            
+            } else {
+
+                var paymentUrl = '/.netlify/functions/retiro-generate-payment-link?id=' + id + '&age=' + age + '&name=' + name + '&payment=' + payment + '&eventname=' + eventName;
+
+                // Make a fetch request to paymentUrl
+                fetch(paymentUrl)
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (data) {
+                        console.log(data);
+                        insertButtonIntoPage(data.result.url);
+                        sendPaymentLink(data.result.url, id);
+                    });
+
+            }
+        }
+
+        function insertButtonIntoPage(url) {
+
+            window.paymentLink = url;
+
+            // Add a link into the page with the payment information
+            var link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('class', 'links ative-green-link');
+            link.setAttribute('style', 'margin-top: 0;');
+            link.innerHTML = 'Clique aqui para pagar';
+
+            document.getElementById('payment_link').innerHTML = '';
+
+            document.getElementById('payment_link').appendChild(link);
+
+            // Insert a paragraph
+            var paragraph = document.createElement('p');
+            paragraph.innerHTML = 'Para efetuar o pagamento, clique no botão acima. Você será redirecionado para a página de pagamento onde deverá informar os dados do pagante.';
+            paragraph.setAttribute('class', 'text-alert');
+
+            document.getElementById('payment_link').appendChild(paragraph);
+
+            // Insert a divider
+            var divider = document.createElement('hr');
+            divider.setAttribute('class', 'divider');
+
+            document.getElementById('payment_link').appendChild(divider);
+
+            // Insert a button to copy the payment link
+            // var button = document.createElement('a');
+            // button.setAttribute('href', '#');
+            // button.setAttribute('class', 'links');
+            // button.setAttribute('onclick', 'copyPaymentLink()');
+            // button.innerHTML = 'Copiar link de pagamento';
+
+            // document.getElementById('payment_link').appendChild(button);
+
+            // Insert a button to register again
+            // var button = document.createElement('a');
+            // button.setAttribute('href', '/retiro');
+            // button.setAttribute('class', 'links');
+            // button.innerHTML = 'Fazer outra inscrição';
+
+            // document.getElementById('payment_link').appendChild(button);
+        }
+
+        const copyPaymentLink = async () => {
+            try {
+                await navigator.clipboard.writeText(window.paymentLink);
+
+                alert("Link de pagamento copiado!");
+
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+            }
+        }
+
+        function sendPaymentLinkToAirtable(paymentLink, id) {
+
+            let webhookUrl = '/.netlify/functions/retiro-send-payment-link-airtable?id=' + id + '&payment_link=' + paymentLink;
+
+            fetch(webhookUrl)
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    console.log(data);
+                });
+        }
+
+        function sendPaymentLink(paymentLink, id) {
+
+            // https://n8n.venturote.com/webhook-test/retiro-update-payment-link?id=eqZ8qEo&payment-link=xxxxx
+            let webhookUrl = 'https://n8n.venturote.com/webhook/retiro-update-payment-link?id=' + id + '&payment-link=' + paymentLink;
+
+            fetch(webhookUrl)
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    console.log(data);
+                });
+        }
+
+    </script>
+
+</body>
+
+</html>
