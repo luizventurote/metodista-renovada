@@ -61,10 +61,10 @@ const updateRecordTags = async (baseId, tableName, recordId, tags, apiKey) => {
 const handler = async (event) => {
   try {
     // Get request parameters
-    const { id, name, event, payment_link } = event.queryStringParameters;
+    const { id, name, event: eventName, payment_link } = event.queryStringParameters;
 
     // Verify required parameters
-    if (!id || !name || !event || !payment_link) {
+    if (!id || !name || !eventName || !payment_link) {
       return {
         statusCode: 400,
         body: JSON.stringify({ message: 'Missing parameters: id, name, event, and payment_link are required' })
@@ -156,7 +156,7 @@ const handler = async (event) => {
     }
 
     // Step 5: Send email via Resend
-    const emailSubject = `Inscrição Realizada com Sucesso - ${event}`;
+    const emailSubject = `Inscrição Realizada com Sucesso - ${eventName}`;
     const emailHtml = `
       <!DOCTYPE html>
       <html>
@@ -167,7 +167,7 @@ const handler = async (event) => {
         <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
           <h2 style="color: #2c3e50;">Inscrição Realizada com Sucesso!</h2>
           <p>Olá <strong>${name}</strong>,</p>
-          <p>Sua inscrição para o evento <strong>${event}</strong> foi realizada com sucesso!</p>
+          <p>Sua inscrição para o evento <strong>${eventName}</strong> foi realizada com sucesso!</p>
           <p>Para finalizar sua inscrição, você precisa realizar o pagamento. Clique no botão abaixo para acessar o link de pagamento:</p>
           <div style="text-align: center; margin: 30px 0;">
             <a href="${payment_link}" style="background-color: #4CAF50; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">Realizar Pagamento</a>
