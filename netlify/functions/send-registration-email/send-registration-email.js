@@ -168,13 +168,9 @@ const handler = async (event) => {
           <h2 style="color: #2c3e50;">Inscrição Realizada com Sucesso!</h2>
           <p>Olá <strong>${name}</strong>,</p>
           <p>Sua inscrição para o evento <strong>${eventName}</strong> foi realizada com sucesso!</p>
-          <p>Para finalizar sua inscrição, você precisa realizar o pagamento. Clique no botão abaixo para acessar o link de pagamento:</p>
-          <div style="text-align: center; margin: 30px 0;">
-            <a href="${payment_link}" style="background-color: #4CAF50; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">Realizar Pagamento</a>
-          </div>
-          <p>Ou copie e cole o link abaixo no seu navegador:</p>
+          <p>Para finalizar sua inscrição, você precisa realizar o pagamento. Clique no link abaixo para realizar o pagamento:</p>
           <p style="word-break: break-all; color: #0066cc;">${payment_link}</p>
-          <p style="margin-top: 30px; font-size: 12px; color: #666;">Este é um email automático, por favor não responda.</p>
+          <p style="margin-top: 30px; font-size: 12px; color: #666;">Este é um email automático.</p>
         </div>
       </body>
       </html>
