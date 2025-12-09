@@ -11,7 +11,9 @@
  */
 const extractInscriptionId = (text) => {
   if (!text) return null;
-  const match = text.match(/\(([A-Z0-9]+)\)/);
+  // Match ID in parentheses: can contain uppercase, lowercase letters and numbers
+  // Example: "Inscrição de Luiz para Evento (81VYLQl)."
+  const match = text.match(/\(([A-Za-z0-9]+)\)/);
   return match ? match[1] : null;
 };
 
@@ -491,38 +493,35 @@ const handler = async (event) => {
       inscriptionId = extractInscriptionId(paymentData.name);
     }
 
-    // Always log to Slack
-    if (SLACK_WEBHOOK_URL) {
-      const eventData = {
-        inscriptionId: inscriptionId || null
-      };
-
-      // If no inscription ID, this is a regular payment (not an event)
-      if (!inscriptionId) {
-        await sendSlackLog(SLACK_WEBHOOK_URL, paymentData, eventData);
-      } else {
-        // Process event payment
-        if (!AIRTABLE_API_KEY || !RESEND_API_KEY) {
+    // If inscription ID found, process as event payment
+    if (inscriptionId) {
+      // Check if API keys are configured
+      if (!AIRTABLE_API_KEY || !RESEND_API_KEY) {
+        // Log to Slack if configured
+        if (SLACK_WEBHOOK_URL) {
           await sendSlackLog(SLACK_WEBHOOK_URL, paymentData, {
-            ...eventData,
+            inscriptionId,
             error: 'AIRTABLE_API_KEY or RESEND_API_KEY not configured'
           });
-
-          return {
-            statusCode: 500,
-            body: JSON.stringify({ message: 'API keys not configured' })
-          };
         }
 
-        const eventResult = await processEventPayment({
-          inscriptionId,
-          paymentData,
-          airtableConfig,
-          resendApiKey: RESEND_API_KEY,
-          airtableApiKey: AIRTABLE_API_KEY
-        });
+        return {
+          statusCode: 500,
+          body: JSON.stringify({ message: 'API keys not configured' })
+        };
+      }
 
-        // Log result to Slack
+      // Process event payment
+      const eventResult = await processEventPayment({
+        inscriptionId,
+        paymentData,
+        airtableConfig,
+        resendApiKey: RESEND_API_KEY,
+        airtableApiKey: AIRTABLE_API_KEY
+      });
+
+      // Log result to Slack if configured
+      if (SLACK_WEBHOOK_URL) {
         await sendSlackLog(SLACK_WEBHOOK_URL, paymentData, {
           inscriptionId,
           userName: eventResult.userName,
@@ -531,22 +530,30 @@ const handler = async (event) => {
           emailSent: eventResult.emailSent,
           error: eventResult.error
         });
-
-        return {
-          statusCode: eventResult.success ? 200 : 400,
-          body: JSON.stringify({
-            message: eventResult.success 
-              ? 'Payment confirmed and processed successfully' 
-              : eventResult.error,
-            inscriptionId,
-            statusUpdated: eventResult.statusUpdated,
-            emailSent: eventResult.emailSent
-          })
-        };
       }
+
+      return {
+        statusCode: eventResult.success ? 200 : 400,
+        body: JSON.stringify({
+          message: eventResult.success 
+            ? 'Payment confirmed and processed successfully' 
+            : eventResult.error,
+          inscriptionId,
+          statusUpdated: eventResult.statusUpdated,
+          emailSent: eventResult.emailSent
+        })
+      };
     }
 
-    // For non-event payments, just return success
+    // No inscription ID found - this is a regular payment (not an event)
+    // Log to Slack if configured
+    if (SLACK_WEBHOOK_URL) {
+      await sendSlackLog(SLACK_WEBHOOK_URL, paymentData, {
+        inscriptionId: null
+      });
+    }
+
+    // Return success for regular payments
     return {
       statusCode: 200,
       body: JSON.stringify({ 
