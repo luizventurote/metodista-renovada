@@ -182,7 +182,7 @@ const handler = async (event) => {
       resendHeaders.append("Content-Type", "application/json");
 
       const resendBody = JSON.stringify({
-        from: "luiz@metodistarenovada.com",
+        from: "Igreja Metodista Renovada <luiz@metodistarenovada.com>",
         to: userEmail,
         subject: emailSubject,
         html: emailHtml
