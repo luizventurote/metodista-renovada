@@ -28,6 +28,7 @@
         const REGISTER_URL = 'https://metodista.org/virada';
         const THANKYOU_URL = 'https://metodista.org/evento-pagamento-obrigado';
         const MINIMUM_AGE_TO_PAY = 6;
+        const SEND_REGISTRATION_EMAIL = false;
 
         // Get the URL parameters
         var urlParams = new URLSearchParams(window.location.search);
@@ -79,7 +80,11 @@
                         console.log(data);
                         insertButtonIntoPage(data.result.url);
                         sendPaymentLink(data.result.url, id);
-                        sendRegistrationEmail(data.result.url, id, name, eventName);
+
+                        // Enviar email de inscrição com link de pagamento
+                        if (SEND_REGISTRATION_EMAIL) {
+                            sendRegistrationEmail(data.result.url, id, name, eventName);
+                        }
                     });
 
             }
@@ -142,6 +147,7 @@
             }
         }
 
+        // Update the payment link in the airtable database
         function sendPaymentLink(paymentLink, id) {
 
             let webhookUrl = '/.netlify/functions/retiro-send-payment-link-airtable?id=' + id + '&payment_link=' + paymentLink;
@@ -155,6 +161,7 @@
                 });
         }
 
+        // Send an email to the registration - With payment link
         function sendRegistrationEmail(paymentLink, id, name, eventName) {
 
             let emailUrl = '/.netlify/functions/send-registration-email?id=' + id + '&name=' + encodeURIComponent(name) + '&event=' + encodeURIComponent(eventName) + '&payment_link=' + encodeURIComponent(paymentLink);
@@ -171,6 +178,7 @@
                 });
         }
 
+        // Send an email to the exempt registration - Isento de pagamento
         function sendExemptRegistrationEmail(id, name, eventName) {
 
             let emailUrl = '/.netlify/functions/send-exempt-registration-email?id=' + id + '&name=' + encodeURIComponent(name) + '&event=' + encodeURIComponent(eventName || '');
