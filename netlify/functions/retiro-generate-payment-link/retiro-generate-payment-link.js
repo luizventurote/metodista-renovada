@@ -3,7 +3,11 @@ const handler = async (event) => {
   try {
 
     const THANKYOU_URL = 'https://www.metodistarenovada.com/evento-pagamento-obrigado';
-    const MIN_AGE_FOR_PAYMENT = 6;
+    const MIN_AGE_FOR_PAYMENT = 5;
+    const PIX_VALUE = 160;
+    const PIX_KIDS_VALUE = 110;
+    const CREDIT_CARD_FEE = 15;
+    const CREDIT_CARD_MAX_INSTALLMENT_COUNT = 3;
 
     // Get request id, name and age param
     const { id, name, age, payment, eventname } = event.queryStringParameters;
@@ -31,11 +35,11 @@ const handler = async (event) => {
     const { ASAAS_API_KEY } = process.env;
 
     // Value of payment link
-    let value = 135;
+    let value = PIX_VALUE;
     let extraMessage = "";
 
     if (age >= MIN_AGE_FOR_PAYMENT && age <= 10) {
-      value = 100;
+      value = PIX_KIDS_VALUE;
       extraMessage = "Valor promocional para criança.";
     }
 
@@ -47,9 +51,9 @@ const handler = async (event) => {
     // Credit card payment fee
     if (payment.toLowerCase().includes("cart") && age >= MIN_AGE_FOR_PAYMENT) {
       paymentType = "CREDIT_CARD";
-      maxInstallmentCount = 3;
+      maxInstallmentCount = CREDIT_CARD_MAX_INSTALLMENT_COUNT;
 
-      value = value + 15;
+      value = value + CREDIT_CARD_FEE;
 
       extraMessage = extraMessage + " Pagamento via cartão de crédito com acréscimo da taxa do cartão.";
     }
