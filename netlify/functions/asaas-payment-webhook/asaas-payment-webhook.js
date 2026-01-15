@@ -443,7 +443,6 @@ const handler = async (event) => {
     try {
       webhookData = JSON.parse(event.body);
     } catch (parseError) {
-      // Return 200 to prevent Asaas from pausing the webhook
       // Log error in response body for debugging
       return {
         statusCode: 200,
